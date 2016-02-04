@@ -58,7 +58,6 @@ class MicroBlogger
         when 't' then tweet(parts[1..-1].join(" "))
         when 's' then spam_my_followers(parts[1..-1].join(" "))
         when 'dm' then dm(parts[1], parts[2..-1].join(" "))
-        when 'lt' then everyones_last_tweet
         else
           puts "Sorry, I don't know how to #{command}"
       end
