@@ -16,6 +16,33 @@ class MicroBlogger
     end
   end
   
+  def dm(target, message)
+    screen_name = @client.followers.collect { |follower| @client.user(follower).screen_name }
+    
+    puts "Trying to send #{target} this direct message:"
+    puts message
+    message = "d @#{target} #{message}"
+    if screen_name.include?(target)
+      tweet(message)
+    else
+      puts "You don't currently follow this user."
+    end
+  end
+  
+  def followers_list
+    screen_names = []
+    @client.followers.each { |follower| screen_names << @client.user(follower).screen_name }
+    return screen_names
+  end
+  
+  def spam_my_followers(message)
+    followers = followers_list
+    
+    followers.each do |follower|
+      dm(follower, message)
+    end
+  end
+  
   def run
     puts "Welcome to the JSL Twitter Client!"
     
@@ -29,6 +56,8 @@ class MicroBlogger
       case command
         when 'q' then puts "Goodbye!"
         when 't' then tweet(parts[1..-1].join(" "))
+        when 's' then spam_my_followers(parts[1..-1].join(" "))
+        when 'dm' then dm(parts[1], parts[2..-1].join(" "))
         else
           puts "Sorry, I don't know how to #{command}"
       end
